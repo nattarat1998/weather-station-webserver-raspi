@@ -1,0 +1,73 @@
+
+How to install this gateway
+
+1. Install Raspbian OS into Raspberry Pi (I use raspberry pi 3 model B)
+2. If you have monitor & keyboard,skip to step 11
+3. Configure file 'cmdline' in SDcard, you have to fix your RPi IP(e.g. 192.168.1.250)
+4. Create new text file 'SSH' and delete .text,then press 'Yes'
+5. Eject SDcard and insert to RPi
+6. Open 'Putty' SSH to IP of RPi port 22
+7. log in as pi / password : raspberry
+8. sudo raspi-config & adjust VNC interface to be enable 
+9. logout
+10. Open VNC viewer to use RPi interface
+11. sudo apt-get update
+12. sudo apt-get install php
+13. sudo apt-get install apache2
+14. sudo apt-get install jq
+15. sudo mkdir /var/www/html/data
+16. sudo mkdir /var/www/html/data/report
+17. cd /
+
+WeeWX: Installation on Debian-based systems
+
+18. Tell your system to trust weewx.com:
+    wget -qO - http://weewx.com/keys.html | sudo apt-key add -
+19. For Debian9 and earlier, use python2:
+    wget -qO - http://weewx.com/apt/weewx-python2.list | sudo tee /etc/apt/sources.list.d/weewx.list
+20. sudo apt-get update
+21. sudo apt-get install weewx
+    Configure your location of weather station
+    Select type of driver 'Simulator'
+To make sure things are running properly look in the system log for messages from WeeWX.
+    sudo tail -f /var/log/syslog
+Wait about 5 minutes,You will see information and web page in directory named weewx
+22. cd var/www/html/weewx/
+23. sudo mkdir ecowitt //create directory to store data(json file, csv file and text file)
+24. cd /home/pi
+25. git clone https://github.com/iz0qwm/ecowitt_http_gateway.git
+26. cd ecowitt_http_gateway
+27. configure index.php
+    sudo cp index.php /var/www/html/data/report 
+28. cd weewx
+29. sudo cp ecowitt.py /usr/share/weewx/weewx/drivers/
+
+30. Configure weewx.conf in /etc/weewx/
+    I already enclosed the configured weewx.conf in this directory
+
+Restart weewx service
+31. sudo /etc/init.d/weewx stop
+    sudo /etc/init.d/weewx start
+
+32. Download mobile app 'wview'
+33. Configure new device (WiFi)
+    configure server that weather station send data to (http://ipofraspberry.com) path /data/report
+    port = 80 upload interval = 60 (update rate in second)
+
+Now your web server will generate file which store data of weather station
+If you cd into /var/www/html/weewx/ecowitt,you will see these files
+
+34. Open your web page 'ipofyourRpi/weewx' 
+    You will see the data of weather station and graph display on web page 
+
+Connect to NETPIE 
+
+RPi side :
+    35. sudo apt-get install php-http-request2
+    36. configure index.php 
+
+NETPIE side :
+    37. create device in NETPIE2020
+    
+
+
